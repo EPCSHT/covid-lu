@@ -22,8 +22,8 @@ Apify.main(async () => {
             $('body strong').remove(); // remove bold title from confirmed cases
             const h3 = $('.table--container h3');
             const cases = $(h3[0]);
-            const infected = parseInt(cases.text().match(/\d+/)[0], 10);
-            const deceased = parseInt($(h3[1]).text().match(/\d+/)[0], 10);
+            const infected = parseInt(cases.text().replace('.','').match(/\d+/)[0], 10);
+            const deceased = parseInt($(h3[1]).text().replace('.','').match(/\d+/)[0], 10);
 
             const data = {
                 infected,
