@@ -19,16 +19,17 @@ Apify.main(async () => {
             log.info('Page loaded.');
             const now = new Date();
 
-            $('body strong').remove(); // remove bold title from confirmed cases
-            const h3 = $('.table--container h3');
-            const cases = $(h3[0]);
-            const infected = parseInt(cases.text().replace('.','').match(/\d+/)[0], 10);
-            const deceased = parseInt($(h3[1]).text().replace('.','').match(/\d+/)[0], 10);
+            const [infected, tested, deceased] = $('.page-text .box-content').text().split('\n').filter(text => text.match(/positif:|la crise:|Décès :/gi)).map(text => parseInt(text.replace(/\D/g,''),10));
+
+            const [day,month,year] =$('.page-text .box-content .date').text().replace(/\(|\)/g,'').split('.');
+            let lastUpdatedParsed = new Date(`${month}.${day}.${year}`);
 
             const data = {
                 infected,
                 deceased,
+                tested,
                 sourceUrl,
+                lastUpdatedAtSource: lastUpdatedParsed.toISOString(),
                 lastUpdatedAtApify: new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes())).toISOString(),
                 readMe: 'https://apify.com/tugkan/covid-lu',
             };
