@@ -19,7 +19,9 @@ Apify.main(async () => {
             log.info('Page loaded.');
             const now = new Date();
 
-            const [infected, tested, deceased] = $('.page-text .box-content').text().split('\n').filter(text => text.match(/positif:|la crise:|Décès :/gi)).map(text => parseInt(text.replace(/\D/g,''),10));
+            const infected  = $('.page-text .box-content').text().split('\n').filter(text => text.includes('positif:')).map(text => parseInt(text.toLowerCase().split('positif')[1].replace(/\D/g,''),10))[0];
+            const tested = $('.page-text .box-content').text().split('\n').filter(text => text.includes('la crise:')).map(text => parseInt(text.toLowerCase().split('la crise')[1].replace(/\D/g,''),10))[0];
+            const  deceased = $('.page-text .box-content').text().split('\n').filter(text => text.includes('Décès')).map(text => parseInt(text.split('Décès')[1].replace(/\D/g,''),10))[0];
 
             const [day,month,year] =$('.page-text .box-content .date').text().replace(/\(|\)/g,'').split('.');
             let lastUpdatedParsed = new Date(`${month}.${day}.${year}`);
